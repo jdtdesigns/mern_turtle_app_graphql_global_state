@@ -6,7 +6,11 @@
   "scripts": {
     "server:dev": "cd ./server && npm run dev",
     "client:dev": "cd ./client && npm run dev",
-    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\""
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "install": "cd ./server && npm i",
+    "build": "cd ./client && npm run build",
+    "deploy": "npm run build && git add -A && git commit -m \"ready for deploy\" && git push origin HEAD:main",
+    "start": "cd ./server && npm start"
   },
   "keywords": [],
   "author": "",
