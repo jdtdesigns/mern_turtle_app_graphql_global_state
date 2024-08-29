@@ -31,13 +31,15 @@ function Dashboard() {
   const handleSubmit = async event => {
     event.preventDefault()
 
-    const res = await addTurtle()
+    try {
+      await addTurtle()
 
-    console.log(res)
-
-    setFormData({
-      ...initialFormData
-    })
+      setFormData({
+        ...initialFormData
+      })
+    } catch (error) {
+      console.log('add turtle error', error)
+    }
   }
 
   const handleDeleteTurtle = async (id) => {
