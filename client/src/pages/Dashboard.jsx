@@ -31,6 +31,10 @@ function Dashboard() {
   const handleSubmit = async event => {
     event.preventDefault()
 
+    if (!formData.name || !formData.weapon || !formData.headbandColor) {
+      return
+    }
+
     try {
       await addTurtle()
 
