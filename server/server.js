@@ -30,18 +30,20 @@ async function startServer() {
     expressMiddleware(server, {
       context: ({ req, res }) => {
         const token = req.cookies.token;
+        let user_id = null;
 
         if (token) {
           try {
-            const { user_id } = verify(token, process.env.JWT_SECRET);
+            const { user_id: id } = verify(token, process.env.JWT_SECRET);
 
-            req.user_id = user_id;
+            user_id = id;
           } catch (error) {
             console.log('token verification error', error);
           }
         }
 
         return {
+          user_id,
           req,
           res
         }

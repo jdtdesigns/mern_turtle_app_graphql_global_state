@@ -12,6 +12,12 @@ const initialFormData = {
 
 function Dashboard() {
   const [formData, setFormData] = useState(initialFormData)
+  const [turtles, setTurtles] = useState([])
+  const [editData, setEditData] = useState({
+    name: '',
+    weapon: '',
+    headbandColor: ''
+  })
   const [addTurtle] = useMutation(ADD_TURTLE, {
     variables: formData,
     refetchQueries: [GET_USER_TURTLES, GET_ALL_TURTLES]
@@ -19,7 +25,15 @@ function Dashboard() {
   const [deleteTurtle] = useMutation(DELETE_TURTLE, {
     refetchQueries: [GET_USER_TURTLES, GET_ALL_TURTLES]
   })
-  const { data: turtleData } = useQuery(GET_USER_TURTLES)
+
+  useQuery(GET_USER_TURTLES, {
+    onCompleted(data) {
+      setTurtles(data.getUserTurtles.map(tObj => ({
+        ...tObj,
+        edit: false
+      })))
+    }
+  })
 
   const handleInputChange = event => {
     setFormData({
@@ -58,6 +72,23 @@ function Dashboard() {
     }
   }
 
+  const toggleEditMode = id => {
+    setTurtles(turtles.map(tObj => tObj._id === id ? ({ ...tObj, edit: true }) : ({ ...tObj, edit: false })))
+  }
+
+  const handleEditInputChange = event => {
+    setEditData({
+      ...editData,
+      [event.target.name]: event.target.value
+    })
+  }
+
+  const handleEditTurtle = event => {
+    event.preventDefault()
+
+    console.log(editData)
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit} className="column">
@@ -91,15 +122,30 @@ function Dashboard() {
       <section className="turtle-container">
         <h1>Your Turtles:</h1>
 
-        {!turtleData?.getUserTurtles.length && <h2>No turtles have beed added.</h2>}
+        {!turtles.length && <h2>No turtles have beed added.</h2>}
 
         <div className="turtle-output">
-          {turtleData?.getUserTurtles.map(turtleObj => (
+          {turtles.map(turtleObj => (
             <article key={turtleObj._id}>
-              <h3>{turtleObj.name}</h3>
-              <p>Weapon: {turtleObj.weapon}</p>
-              <p>Headband: {turtleObj.headbandColor}</p>
-              <button onClick={() => handleDeleteTurtle(turtleObj._id)}>Delete</button>
+              {turtleObj.edit ? (
+                <form className="column" onSubmit={handleEditTurtle}>
+                  <h4 className="text-center">Edit Turtle</h4>
+                  <input type="text" onChange={handleEditInputChange} name="name" value={turtleObj.name} />
+                  <input type="text" onChange={handleEditInputChange} name="weapon" value={turtleObj.weapon} />
+                  <input type="text" onChange={handleEditInputChange} name="headbandColor" value={turtleObj.headbandColor} />
+                  <button>Save</button>
+                </form>
+              ) : (
+                <>
+                  <h3>{turtleObj.name}</h3>
+                  <p>Weapon: {turtleObj.weapon}</p>
+                  <p>Headband: {turtleObj.headbandColor}</p>
+                </>
+              )}
+              <div className="row">
+                <button className="edit-btn" onClick={() => toggleEditMode(turtleObj._id)}>Edit</button>
+                <button className="delete-btn" onClick={() => handleDeleteTurtle(turtleObj._id)}>Delete</button>
+              </div>
             </article>
           ))}
         </div>

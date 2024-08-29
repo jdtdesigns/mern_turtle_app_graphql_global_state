@@ -12,13 +12,13 @@ function createToken(user_id) {
 const resolvers = {
   Query: {
     async getUser(_, args, context) {
-      if (!context.req.user_id) {
+      if (!context.user_id) {
         return {
           user: null
         }
       }
 
-      const user = await User.findById(context.req.user_id);
+      const user = await User.findById(context.user_id);
 
       if (!user) {
         return {
@@ -32,7 +32,7 @@ const resolvers = {
     },
 
     async getUserTurtles(_, args, context) {
-      const user_id = context.req.user_id;
+      const user_id = context.user_id;
 
       if (!user_id) {
         throw new GraphQLError({
@@ -116,7 +116,7 @@ const resolvers = {
 
     // Turtle Resolvers
     async addTurtle(_, args, context) {
-      const user_id = context.req.user_id;
+      const user_id = context.user_id;
 
       if (!user_id) {
         throw new GraphQLError('You are not authorized to perform that action')
@@ -135,7 +135,7 @@ const resolvers = {
     },
 
     async deleteTurtle(_, args, context) {
-      const user_id = context.req.user_id;
+      const user_id = context.user_id;
 
       if (!user_id) {
         throw new GraphQLError('You are not authorized to perform that action')

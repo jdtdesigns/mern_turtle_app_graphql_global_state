@@ -184,7 +184,7 @@ section.turtle-container {
       border: 3px solid $green;
       padding: 20px;
       border-radius: 10px;
-      h3 {
+      h3, h4 {
         color: $green;
       }
 
@@ -195,11 +195,27 @@ section.turtle-container {
 
       button {
         margin-top: 8px;
-        background: #da6789;
+        background: $green;
         color: #fff;
         padding: 4px 8px;
         border: none;
         border-radius: 3px; 
+
+        &.edit-btn {
+          background: #e4a908;
+          margin-right: 8px;
+        }
+
+        &.delete-btn {
+          background: #fc6666;
+        }
+      }
+
+      form {
+        width: 150px;
+        input {
+          color: #555;
+        }
       }
     }
   }
