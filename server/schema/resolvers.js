@@ -1,5 +1,5 @@
 const { User, Turtle } = require('../models');
-const { sign, verify } = require('jsonwebtoken');
+const { sign } = require('jsonwebtoken');
 
 const { GraphQLError } = require('graphql');
 
@@ -12,28 +12,43 @@ function createToken(user_id) {
 const resolvers = {
   Query: {
     async getUser(_, args, context) {
-      const token = context.req.cookies.token;
+      if (!context.req.user_id) {
+        return {
+          user: null
+        }
+      }
 
-      if (!token) {
+      const user = await User.findById(context.req.user_id);
+
+      if (!user) {
+        return {
+          user: null
+        }
+      }
+
+      return {
+        user
+      };
+    },
+
+    async getUserTurtles(_, args, context) {
+      const user_id = context.req.user_id;
+
+      if (!user_id) {
         throw new GraphQLError({
           message: 'Not Authorized'
         })
       }
 
-      const { user_id } = verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(user_id).populate('turtles');
 
-      const user = await User.findById(user_id);
+      return user.turtles;
+    },
 
-      if (!user) {
-        throw new GraphQLError({
-          message: 'No User Found'
-        })
-      }
+    async getAllTurtles() {
+      const turtles = await Turtle.find().populate('user');
 
-      return {
-        message: 'User Found',
-        user
-      };
+      return turtles;
     }
   },
 
@@ -101,13 +116,11 @@ const resolvers = {
 
     // Turtle Resolvers
     async addTurtle(_, args, context) {
-      const token = context.req.cookies.token;
+      const user_id = context.req.user_id;
 
-      if (!token) {
+      if (!user_id) {
         throw new GraphQLError('You are not authorized to perform that action')
       }
-
-      const { user_id } = verify(token, process.env.JWT_SECRET);
 
       const user = await User.findById(user_id);
       const turtle = await Turtle.create({
@@ -119,6 +132,31 @@ const resolvers = {
       await user.save();
 
       return turtle
+    },
+
+    async deleteTurtle(_, args, context) {
+      const user_id = context.req.user_id;
+
+      if (!user_id) {
+        throw new GraphQLError('You are not authorized to perform that action')
+      }
+
+      const user = await User.findById(user_id);
+
+      if (!user.turtles.includes(args.turtle_id)) {
+        throw new GraphQLError('You cannot delete a turtle that you did not add');
+      }
+
+      await Turtle.deleteOne({
+        _id: args.turtle_id
+      });
+
+      user.turtles.pull(args.turtle_id);
+      await user.save();
+
+      return {
+        message: 'Turtle deleted successfully'
+      }
     }
   }
 };

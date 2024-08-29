@@ -16,14 +16,14 @@ export function StoreProvider({ children }) {
 
   useEffect(() => {
     if (!loading && data) {
-      console.log(data)
+
       setState({
         ...state,
         user: data.getUser.user,
         loading: false
       })
     }
-  }, [data, loading])
+  }, [data])
 
   return (
     <StoreContext.Provider value={{

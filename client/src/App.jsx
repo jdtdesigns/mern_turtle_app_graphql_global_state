@@ -9,8 +9,6 @@ import HomePage from './pages/HomePage'
 import AuthForm from './pages/AuthForm'
 import Dashboard from './pages/Dashboard'
 
-
-
 function App() {
   const { state } = useStore()
 

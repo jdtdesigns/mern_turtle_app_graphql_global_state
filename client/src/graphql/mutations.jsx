@@ -41,3 +41,11 @@ export const ADD_TURTLE = gql`
     }
   }
 `
+
+export const DELETE_TURTLE = gql`
+  mutation DeleteTurtle($turtle_id: ID) {
+    deleteTurtle(turtle_id: $turtle_id) {
+      message
+    }
+  }
+`

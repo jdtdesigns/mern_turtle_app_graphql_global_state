@@ -1,26 +1,37 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 
+import { useStore } from '../store'
+
 import { LOGOUT_USER } from '../graphql/mutations'
 
-function Header(props) {
+function Header() {
+  const { state, setState } = useStore()
   const navigate = useNavigate()
   const [logoutUser] = useMutation(LOGOUT_USER)
 
   const handleLogout = async () => {
     await logoutUser()
-    await props.setUser(null)
+    await setState(oldState => ({
+      ...oldState,
+      user: null
+    }))
 
     navigate('/')
   }
 
   return (
     <header className="row justify-between align-center">
-      <h3>Cowabunga</h3>
+      <NavLink to="/">
+        <h3>Cowabunga</h3>
+      </NavLink>
 
-      {props.user ? (
+      {state.user ? (
         <div className="row align-center">
-          <p>Welcome, {props.user.username}</p>
+          <p>Welcome, {state.user.username}</p>
+
+          <NavLink className="dashboard-link" to="/dashboard">Dashboard</NavLink>
+
           <button onClick={handleLogout}>Log Out</button>
         </div>
       ) : (
