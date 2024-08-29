@@ -63,9 +63,9 @@ function Dashboard() {
       <form onSubmit={handleSubmit} className="column">
         <h2 className="text-center">Add a Ninja Turtle</h2>
 
-        <input type="text" onChange={handleInputChange} value={formData.name} name="name" placeholder="Enter the Turtle's name (Must be a renaissance artist)" />
-        <input type="text" onChange={handleInputChange} value={formData.weapon} name="weapon" placeholder="Enter the Turtle's weapon" />
-        <input type="text" onChange={handleInputChange} value={formData.headbandColor} name="headbandColor" placeholder="Enter the Turtle's headband color" />
+        <input type="text" onChange={handleInputChange} value={formData.name} name="name" placeholder="Enter the Turtle's name (Must be a renaissance artist)" required />
+        <input type="text" onChange={handleInputChange} value={formData.weapon} name="weapon" placeholder="Enter the Turtle's weapon" required />
+        <input type="text" onChange={handleInputChange} value={formData.headbandColor} name="headbandColor" placeholder="Enter the Turtle's headband color" required />
 
         <button>Add</button>
       </form>
