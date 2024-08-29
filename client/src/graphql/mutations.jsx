@@ -42,6 +42,14 @@ export const ADD_TURTLE = gql`
   }
 `
 
+export const EDIT_TURTLE = gql`
+  mutation EditTurtle($_id: ID, $name: String, $weapon: String, $headbandColor: String) {
+    editTurtle(_id: $_id, name: $name, weapon: $weapon, headbandColor: $headbandColor) {
+      message
+    }
+  }
+`
+
 export const DELETE_TURTLE = gql`
   mutation DeleteTurtle($turtle_id: ID) {
     deleteTurtle(turtle_id: $turtle_id) {

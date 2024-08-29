@@ -38,6 +38,7 @@ const typeDefs = gql`
 
     # Turtle Mutations
     addTurtle(name: String, weapon: String, headbandColor: String): Turtle
+    editTurtle(_id: ID, name: String, weapon: String, headbandColor: String): Response
     deleteTurtle(turtle_id: ID): Response
   }
 `;

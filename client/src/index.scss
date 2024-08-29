@@ -194,7 +194,6 @@ section.turtle-container {
       }
 
       button {
-        margin-top: 8px;
         background: $green;
         color: #fff;
         padding: 4px 8px;
@@ -211,10 +210,24 @@ section.turtle-container {
         }
       }
 
+      .content {
+        margin-bottom: 8px;
+      }
+
       form {
         width: 150px;
+        margin: 3px 0 8px;
         input {
           color: #555;
+          padding: 3px 6px;
+          font-size: .8rem;
+        }
+        button {
+          padding: 3px 0;
+          font-size: .85rem;
+          &.cancel-btn {
+            background: #777;
+          }
         }
       }
     }

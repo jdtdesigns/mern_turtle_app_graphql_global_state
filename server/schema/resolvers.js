@@ -134,6 +134,30 @@ const resolvers = {
       return turtle
     },
 
+    async editTurtle(_, args, context) {
+      const user_id = context.user_id;
+
+      if (!user_id) {
+        throw new GraphQLError('You are not authorized to perform that action');
+      }
+
+      const user = await User.findById(user_id);
+
+      if (!user.turtles.includes(args._id)) {
+        throw new GraphQLError('You cannot edit a turtle that you did not add');
+      }
+
+      await Turtle.findOneAndUpdate({
+        _id: args._id
+      }, {
+        ...args
+      })
+
+      return {
+        message: 'Turtle updated successfully!'
+      }
+    },
+
     async deleteTurtle(_, args, context) {
       const user_id = context.user_id;
 
