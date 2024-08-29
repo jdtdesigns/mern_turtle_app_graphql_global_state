@@ -54,9 +54,10 @@ function AuthForm() {
         }))
       } else {
         res = await registerUser()
+
         await setState(oldState => ({
           ...oldState,
-          user: res.data.loginUser.user
+          user: res.data.registerUser.user
         }))
       }
 
